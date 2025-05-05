@@ -37,7 +37,7 @@ func Read() (Config, error) {
 
 	err = json.Unmarshal(data, &configStruct)
 	if err != nil {
-		return configStruct, fmt.Errorf("error unmarshalling JSON file to struct: %w", err)
+		return configStruct, fmt.Errorf("error unmarshalling JSON file to struct:\n %w", err)
 	}
 
 	return configStruct, nil
@@ -46,19 +46,19 @@ func Read() (Config, error) {
 func (c *Config) SetUser(currentUsername string) error {
 	homeDirectory, err := getConfigFilePath()
 	if err != nil {
-		return fmt.Errorf("error returning the current user's home directory: %w", err)
+		return fmt.Errorf("error returning the current user's home directory:\n %w", err)
 	}
 
 	c.CurrentUsername = currentUsername
 
 	configJSON, err := json.Marshal(c)
 	if err != nil {
-		return fmt.Errorf("error marshalling Config struct to JSON: %w", err)
+		return fmt.Errorf("error marshalling Config struct to JSON:\n %w", err)
 	}
 
 	err = os.WriteFile(homeDirectory+"/"+configFilename, configJSON, 0644)
 	if err != nil {
-		return fmt.Errorf("error writing config JSON to file: %w", err)
+		return fmt.Errorf("error writing config JSON to file:\n %w", err)
 	}
 
 	return nil
