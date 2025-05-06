@@ -1,10 +1,13 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
 	"github.com/SamW94/blogo-aggregator/internal/config"
+	"github.com/SamW94/blogo-aggregator/internal/database"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -21,6 +24,9 @@ func main() {
 	}
 
 	commands.register("login", handlerLogin)
+	commands.register("register", handlerRegister)
+	commands.register("reset", handlerReset)
+	commands.register("users", handlerUsers)
 
 	inputArguments := os.Args
 	if len(inputArguments) < 2 {
@@ -33,6 +39,14 @@ func main() {
 		name:      inputArguments[1],
 		arguments: inputArguments[2:],
 	}
+
+	db, err := sql.Open("postgres", appState.config.DBUrl)
+	if err != nil {
+		fmt.Printf("error opening connection to postgres DB: %v", err)
+	}
+
+	dbQueries := database.New(db)
+	appState.db = dbQueries
 
 	err = commands.run(&appState, inputCommand)
 	if err != nil {
