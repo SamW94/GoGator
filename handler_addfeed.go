@@ -9,18 +9,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerAddfeed(s *state, cmd command) error {
+func handlerAddfeed(s *state, cmd command, user database.User) error {
 	if len(cmd.arguments) < 2 {
 		return fmt.Errorf("not enough arguments supplied - the addfeed handler expects 2 arguments in format 'gator addfeed <name> <url>")
 	}
 
-	context := context.Background()
-	userStruct, err := s.db.GetUser(context, s.config.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("error retrieving current user from database.GetUser() function: %w", err)
-	}
-
-	userID := userStruct.ID
+	userID := user.ID
 	name := cmd.arguments[0]
 	url := cmd.arguments[1]
 
@@ -33,7 +27,7 @@ func handlerAddfeed(s *state, cmd command) error {
 		UserID:    userID,
 	}
 
-	feed, err := s.db.CreateFeed(context, feedParams)
+	feed, err := s.db.CreateFeed(context.Background(), feedParams)
 	if err != nil {
 		return fmt.Errorf("error calling database.CreateFeed() function: %w", err)
 	}
@@ -46,7 +40,7 @@ func handlerAddfeed(s *state, cmd command) error {
 		FeedID:    feed.ID,
 	}
 
-	_, err = s.db.CreateFeedFollow(context, followParams)
+	_, err = s.db.CreateFeedFollow(context.Background(), followParams)
 	if err != nil {
 		return fmt.Errorf("error calling the database.CreateFeedFollow() function: %w", err)
 	}

@@ -3,19 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"github.com/SamW94/blogo-aggregator/internal/database"
 )
 
-func handlerFollowing(s *state, cmd command) error {
-	context := context.Background()
+func handlerFollowing(s *state, cmd command, user database.User) error {
+	userID := user.ID
 
-	userStruct, err := s.db.GetUser(context, s.config.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("error retrieving current user from database.GetUser() function: %w", err)
-	}
-
-	userID := userStruct.ID
-
-	feedFollows, err := s.db.GetFeedFollowsForUser(context, userID)
+	feedFollows, err := s.db.GetFeedFollowsForUser(context.Background(), userID)
 	if err != nil {
 		return fmt.Errorf("error calling the database.GetFeedFollowsForUser() function: %w", err)
 	}
