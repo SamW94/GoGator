@@ -9,41 +9,34 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerAddfeed(s *state, cmd command) error {
-	if len(cmd.arguments) < 2 {
-		return fmt.Errorf("not enough arguments supplied - the addfeed handler expects 2 arguments in format 'gator addfeed <name> <url>")
+func handlerFollow(s *state, cmd command) error {
+	if len(cmd.arguments) == 0 {
+		return fmt.Errorf("no arguments supplied with follow command - the follow handler expects a URL in format 'gator follow <url>")
 	}
 
+	url := cmd.arguments[0]
 	context := context.Background()
+
 	userStruct, err := s.db.GetUser(context, s.config.CurrentUsername)
 	if err != nil {
 		return fmt.Errorf("error retrieving current user from database.GetUser() function: %w", err)
 	}
 
 	userID := userStruct.ID
-	name := cmd.arguments[0]
-	url := cmd.arguments[1]
 
-	feedParams := database.CreateFeedParams{
-		ID:        uuid.New(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Name:      name,
-		Url:       url,
-		UserID:    userID,
-	}
-
-	feed, err := s.db.CreateFeed(context, feedParams)
+	feedStruct, err := s.db.GetFeed(context, url)
 	if err != nil {
-		return fmt.Errorf("error calling database.CreateFeed() function: %w", err)
+		return fmt.Errorf("error retrieving feed with URL %s from database.GetFeed(): %w", url, err)
 	}
+
+	feedID := feedStruct.ID
 
 	followParams := database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		UserID:    userID,
-		FeedID:    feed.ID,
+		FeedID:    feedID,
 	}
 
 	_, err = s.db.CreateFeedFollow(context, followParams)
@@ -51,6 +44,7 @@ func handlerAddfeed(s *state, cmd command) error {
 		return fmt.Errorf("error calling the database.CreateFeedFollow() function: %w", err)
 	}
 
-	fmt.Println(feed)
+	fmt.Printf("Feed Name: %s\nCurrent User: %s\n", feedStruct.Name, userStruct.Name)
+
 	return nil
 }
