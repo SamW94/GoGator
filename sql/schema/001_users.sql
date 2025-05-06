@@ -1,6 +1,7 @@
 -- +goose Up
+SELECT uuid_generate_v4();
 CREATE TABLE users(
-    id TEXT,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     name TEXT UNIQUE NOT NULL
