@@ -27,6 +27,9 @@ func main() {
 	commands.register("register", handlerRegister)
 	commands.register("reset", handlerReset)
 	commands.register("users", handlerUsers)
+	commands.register("agg", handlerAgg)
+	commands.register("addfeed", handlerAddfeed)
+	commands.register("feeds", handlerFeeds)
 
 	inputArguments := os.Args
 	if len(inputArguments) < 2 {
