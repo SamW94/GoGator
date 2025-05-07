@@ -36,8 +36,7 @@ func main() {
 
 	inputArguments := os.Args
 	if len(inputArguments) < 2 {
-		fmt.Println("no arguments provided - please provide at least one")
-		fmt.Println(inputArguments[0])
+		fmt.Println("no command provided - please provide one")
 		os.Exit(1)
 	}
 
