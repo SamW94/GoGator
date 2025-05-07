@@ -20,7 +20,8 @@ WITH
     RETURNING id, created_at, updated_at, title, url, description, published_at, feed_id
   )
 
-SELECT
+SELECT inserted_post.id, inserted_post.created_at, inserted_post.updated_at, inserted_post.title, inserted_post.url, inserted_post.description, inserted_post.published_at, inserted_post.feed_id
+FROM inserted_post
 `
 
 type CreatePostParams struct {
@@ -35,6 +36,14 @@ type CreatePostParams struct {
 }
 
 type CreatePostRow struct {
+	ID          uuid.UUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Title       string
+	Url         string
+	Description string
+	PublishedAt time.Time
+	FeedID      uuid.UUID
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (CreatePostRow, error) {
@@ -49,7 +58,16 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (CreateP
 		arg.FeedID,
 	)
 	var i CreatePostRow
-	err := row.Scan()
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Title,
+		&i.Url,
+		&i.Description,
+		&i.PublishedAt,
+		&i.FeedID,
+	)
 	return i, err
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/SamW94/blogo-aggregator/internal/database"
@@ -40,7 +41,11 @@ func scrapeFeeds(s *state, rssClient *rss.Client) error {
 	}
 
 	for i := 0; len(rssFeed.Channel.Item) > i; i++ {
-		fmt.Println(rssFeed.Channel.Item[i].Title)
+		_, err := createPostInDB(s, rssFeed.Channel.Item[i], rssFeed.Channel.Link)
+		if err != nil {
+			log.Printf("error calling the createPostInDB() function: %v", err)
+			continue
+		}
 	}
 
 	return nil
