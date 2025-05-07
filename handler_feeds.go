@@ -9,7 +9,7 @@ func handlerFeeds(s *state, cmd command) error {
 	context := context.Background()
 	feeds, err := s.db.GetFeeds(context)
 	if err != nil {
-		return fmt.Errorf("error calling the database.GetFields() function: %w", err)
+		return fmt.Errorf("error calling the database.GetFeeds() function: %w", err)
 	}
 
 	for _, feed := range feeds {

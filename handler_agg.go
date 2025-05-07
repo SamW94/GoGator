@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -9,12 +8,20 @@ import (
 )
 
 func handlerAgg(s *state, cmd command) error {
-	rssClient := rss.NewClient(5 * time.Second)
-	rssFeed, err := rssClient.FetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
-	if err != nil {
-		return fmt.Errorf("error calling the rss.FetchFeed() function: %w", err)
+	if len(cmd.arguments) == 0 {
+		return fmt.Errorf("no arguments supplied with agg command - the agg handler expects the username in format 'agg <duration>, e.g. agg 1h")
 	}
 
-	fmt.Println(*rssFeed)
-	return nil
+	time_between_reqs, err := time.ParseDuration(cmd.arguments[0])
+	if err != nil {
+		return fmt.Errorf("error parsing duration from provided string %s: %w", cmd.arguments[0], err)
+	}
+
+	fmt.Printf("Collecting feeds every %v\n", time_between_reqs)
+	rssClient := rss.NewClient(5 * time.Second)
+	ticker := time.NewTicker(time_between_reqs)
+	for {
+		scrapeFeeds(s, &rssClient)
+		<-ticker.C
+	}
 }
