@@ -41,7 +41,7 @@ func scrapeFeeds(s *state, rssClient *rss.Client) error {
 	}
 
 	for i := 0; len(rssFeed.Channel.Item) > i; i++ {
-		_, err := createPostInDB(s, rssFeed.Channel.Item[i], rssFeed.Channel.Link)
+		_, err := createPostInDB(s, rssFeed.Channel.Item[i], feed.Url)
 		if err != nil {
 			log.Printf("error calling the createPostInDB() function: %v", err)
 			continue
