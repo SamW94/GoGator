@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/SamW94/blogo-aggregator/internal/config"
-	"github.com/SamW94/blogo-aggregator/internal/database"
+	"github.com/SamW94/GoGator/internal/config"
+	"github.com/SamW94/GoGator/internal/database"
 	_ "github.com/lib/pq"
 )
 

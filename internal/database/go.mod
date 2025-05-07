@@ -1,4 +1,4 @@
-module github.com/SamW94/blogo-aggregator/internal/database
+module github.com/SamW94/GoGator/internal/database
 
 go 1.23.5
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/SamW94/blogo-aggregator/internal/rss"
+	"github.com/SamW94/GoGator/internal/rss"
 )
 
 func handlerAgg(s *state, cmd command) error {

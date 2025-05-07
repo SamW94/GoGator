@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/SamW94/blogo-aggregator/internal/database"
-	"github.com/SamW94/blogo-aggregator/internal/rss"
+	"github.com/SamW94/GoGator/internal/database"
+	"github.com/SamW94/GoGator/internal/rss"
 )
 
 func scrapeFeeds(s *state, rssClient *rss.Client) error {
