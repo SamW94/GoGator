@@ -1,3 +1,3 @@
 package config
 
-const configFilename = ".gatorconfig.json"
+const configFilename = ".gogatorconfig.json"
